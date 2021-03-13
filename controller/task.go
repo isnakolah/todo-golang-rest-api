@@ -52,3 +52,22 @@ func FetchAllTask(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": todos})
 }
+
+func FetchSingleTask(c *gin.Context) {
+	todoID := c.Param("id")
+
+	if len(todoID) <= 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user id"})
+		return
+	}
+
+	var todo model.Task
+	config.GetDB().First(&todo, todoID)
+
+	if todo.ID == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"message": "No todo found!"})
+		return
+	}
+
+	c.JSON(http.StatusOK, todo)
+}
