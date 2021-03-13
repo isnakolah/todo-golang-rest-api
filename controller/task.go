@@ -71,3 +71,33 @@ func FetchSingleTask(c *gin.Context) {
 
 	c.JSON(http.StatusOK, todo)
 }
+
+func UpdateTask(c *gin.Context) {
+	todoID := c.Param("id")
+
+	if len(todoID) <= 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user id"})
+		return
+	}
+
+	var newTodo model.Task
+	if err := c.ShouldBindJSON(&newTodo); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var todo model.Task
+	config.GetDB().First(&todo, todoID)
+
+	if todo.ID <= 0 {
+		c.JSON(http.StatusNotFound, gin.H{"message": "No task found"})
+		return
+	}
+
+	config.GetDB().Model(&todo).Update("title", newTodo.Title)
+	config.GetDB().Model(&todo).Update("description", newTodo.Description)
+
+	config.GetDB().First(&todo, todoID)
+
+	c.JSON(http.StatusOK, gin.H{"message": "Task updated successfully!", "task": todo})
+}
