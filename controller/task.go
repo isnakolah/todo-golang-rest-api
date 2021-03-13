@@ -30,3 +30,25 @@ func CreateTask(c *gin.Context) {
 	config.GetDB().Save(&todo)
 	c.JSON(http.StatusCreated, gin.H{"message": "Task created successfully!", "task": todo})
 }
+
+func FetchAllTask(c *gin.Context) {
+	claims := jwtapple2.ExtractClaims(c)
+
+	var user model.User
+	config.GetDB().Where("id = ?", claims[config.IdentityKey]).First(&user)
+
+	if user.ID <= 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user id"})
+		return
+	}
+
+	var todos []model.Task
+	config.GetDB().Where("user_id = ?", user.ID).Order("created_at desc").Find(&todos)
+
+	if len(todos) <= 0 {
+		c.JSON(http.StatusNotFound, gin.H{"message": "No tasks found", "data": todos})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": todos})
+}
