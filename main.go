@@ -1,6 +1,9 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/gin-gonic/gin"
 	"github.com/isnakolah/todoAPI/config"
 	"github.com/isnakolah/todoAPI/migration"
@@ -18,7 +21,7 @@ func main() {
 	router := route.SetupRoutes()
 
 	port := os.Getenv("PORT")
-	if port = "" {
+	if port == "" {
 		port = "8080"
 	}
 	if err := router.Run(":" + port); err != nil {
