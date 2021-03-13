@@ -101,3 +101,24 @@ func UpdateTask(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Task updated successfully!", "task": todo})
 }
+
+func DeleteTask(c *gin.Context) {
+	todoID := c.Param("id")
+
+	var todo model.Task
+
+	if len(todoID) <= 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user id"})
+		return
+	}
+
+	config.GetDB().First(&todo, todoID)
+
+	if todo.ID == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"message": "No task found!"})
+		return
+	}
+
+	config.GetDB().Delete(&todo)
+	c.JSON(http.StatusOK, gin.H{"message": "Task deleted successfully", "task": todo})
+}
