@@ -14,20 +14,20 @@ func SetupRoutes() *gin.Engine {
 	authMiddleware, err := auth.SetupAuth()
 
 	if err != nil {
-		log.Fatal("JWT Error", +err.Error())
+		log.Fatal("JWT Error" + err.Error())
 	}
 
 	router.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "Welcome to my Todo App")
 	})
 
-	v1 := router.group("/v1")
+	v1 := router.Group("/v1")
 	{
 		v1.POST("/login", authMiddleware.LoginHandler)
 
 		v1.POST("/register", controller.RegisterEndpoint)
 
-		todo := v1.group("/todo")
+		todo := v1.Group("/todo")
 		{
 			todo.POST("/create", authMiddleware.MiddlewareFunc(), controller.CreateTask)
 			todo.POST("/all", authMiddleware.MiddlewareFunc(), controller.FetchAllTask)
