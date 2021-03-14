@@ -18,10 +18,10 @@ func SetupRoutes() *gin.Engine {
 	}
 
 	router.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Welcome to my Todo App")
+		c.JSON(http.StatusOK, gin.H{"message": "Welcome to my Todo App"})
 	})
 
-	v1 := router.Group("/v1")
+	v1 := router.Group("/api/v1")
 	{
 		v1.POST("/login", authMiddleware.LoginHandler)
 
