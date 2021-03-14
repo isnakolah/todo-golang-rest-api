@@ -29,11 +29,11 @@ func SetupRoutes() *gin.Engine {
 
 		todo := v1.Group("/todo")
 		{
-			todo.POST("/create", authMiddleware.MiddlewareFunc(), controller.CreateTask)
-			todo.POST("/all", authMiddleware.MiddlewareFunc(), controller.FetchAllTask)
-			todo.POST("/get/:id", authMiddleware.MiddlewareFunc(), controller.FetchSingleTask)
-			todo.POST("/update/:id", authMiddleware.MiddlewareFunc(), controller.UpdateTask)
-			todo.POST("/delete/:id", authMiddleware.MiddlewareFunc(), controller.DeleteTask)
+			todo.POST("/", authMiddleware.MiddlewareFunc(), controller.CreateTask)
+			todo.GET("/", authMiddleware.MiddlewareFunc(), controller.FetchAllTask)
+			todo.GET("/:id", authMiddleware.MiddlewareFunc(), controller.FetchSingleTask)
+			todo.PUT("/:id", authMiddleware.MiddlewareFunc(), controller.UpdateTask)
+			todo.DELETE("/:id", authMiddleware.MiddlewareFunc(), controller.DeleteTask)
 		}
 	}
 
