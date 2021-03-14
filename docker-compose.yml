@@ -6,7 +6,9 @@ services:
     volumes:
       - .:/todoAPI
     working_dir: /todoAPI
-    command: ./bin/build.sh
+    command: > 
+      bash -c "go build -o ./bin/app main.go
+      && echo 'build ready' && ./bin/app"
     links:
       - postgres
     ports:
@@ -16,9 +18,9 @@ services:
     container_name: postgrestodo
     restart: always
     environment:
-      POSTGRES_DB: tododb
-      POSTGES_USER: admin
-      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: todogolang
+      POSTGES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - 5432:5432
     volumes:
